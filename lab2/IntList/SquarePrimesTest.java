@@ -20,9 +20,17 @@ public class SquarePrimesTest {
 
     @Test
     public void testSquarePrimesTough() {
-        IntList lst = IntList.of(1, 3, 10, 23);
+        IntList lst = IntList.of(1, 3, 10, 23, 17);
         boolean changed = IntListExercises.squarePrimes(lst);
-        assertEquals("1 -> 9 -> 10 -> 529", lst.toString());
+        assertEquals("1 -> 9 -> 10 -> 529 -> 289", lst.toString());
+        assertTrue(changed);
+    }
+
+    @Test
+    public void testSquarePrimesTough2() {
+        IntList lst = IntList.of(1, 17);
+        boolean changed = IntListExercises.squarePrimes(lst);
+        assertEquals("1 -> 289", lst.toString());
         assertTrue(changed);
     }
 }
