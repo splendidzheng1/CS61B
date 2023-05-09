@@ -32,9 +32,9 @@ public class TimeAList {
             for(int i = 0; i < n*1000; i++){
                 list.addLast(i);
             }
+            times.addLast(sw.elapsedTime());
             Ns.addLast(n*1000);
             opCounts.addLast(n*1000);
-            times.addLast(sw.elapsedTime());;
         }
         printTimingTable( Ns, times,  opCounts);
     }
