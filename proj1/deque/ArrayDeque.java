@@ -67,7 +67,7 @@ public class ArrayDeque<Item> {
     }
     /** Gets the ith item in the list (0 is the front). */
     public Item get(int i) {
-        return items[(nextFirst + i) % items.length];
+        return items[(nextFirst + i + 1) % items.length];
     }
 
     /** Returns the number of items in the list. */
