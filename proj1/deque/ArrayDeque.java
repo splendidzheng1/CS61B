@@ -5,25 +5,35 @@ public class ArrayDeque<Item> {
     private int size;
     private int nextFirst;
     private int nextLast;
-    private int capacity;
     private final int INITIALSIZE = 8;
+
+    /** Return true if Deque is empty */
+    public boolean isEmpty(){
+        return size==0?true:false;
+    }
+
     /** Creates an empty list. */
     public ArrayDeque() {
         items = (Item[]) new Object[INITIALSIZE];
         size = 0;
         nextFirst = INITIALSIZE - 1;
         nextLast = 0;
-        capacity = INITIALSIZE;
     }
 
-    /** Resizes the underlying array to the target capacity. */
+    /** Resizes the underlying array to the target items.length. */
     private void resize(int capacity) {
         Item[] a = (Item[]) new Object[capacity];
-        System.arraycopy(items, 0, a, 0, size);
+        // If nextFirst >= nextLast, divide into two part begin with nextFirst
+        // else only copy start with nextFirst and end with nextLast
+        if(nextFirst >= nextLast){
+            System.arraycopy(items, (nextFirst+1)%items.length, a, 0, items.length - nextFirst - 1);
+            System.arraycopy(items, 0, a, items.length - nextFirst - 1, size - (items.length - nextFirst - 1));
+        }else{
+            System.arraycopy(items, (nextFirst+1)%items.length, a, 0, size);
+        }
         items = a;
         nextFirst = capacity - 1;
-        nextLast = size - 1;
-        this.capacity = capacity;
+        nextLast = size;
     }
     /** Inserts X into the front of the list. */
     public void addFirst(Item x){
@@ -33,7 +43,7 @@ public class ArrayDeque<Item> {
 
         items[nextFirst] = x;
         size = size + 1;
-        nextFirst = (nextFirst - 1) % capacity;
+        nextFirst = (nextFirst - 1) % items.length;
     }
 
     /** Inserts X into the back of the list. */
@@ -44,20 +54,20 @@ public class ArrayDeque<Item> {
 
         items[nextLast] = x;
         size = size + 1;
-        nextLast = (nextLast + 1) % capacity;
+        nextLast = (nextLast + 1) % items.length;
     }
     /** Returns the item from the front of the list. */
     public Item getFirst() {
-        return items[(nextFirst + 1)%capacity];
+        return items[(nextFirst + 1)%items.length];
     }
 
     /** Returns the item from the back of the list. */
     public Item getLast() {
-        return items[(nextLast - 1)%capacity];
+        return items[(nextLast - 1 < 0? nextLast - 1 + items.length : nextLast - 1)%items.length];
     }
     /** Gets the ith item in the list (0 is the front). */
     public Item get(int i) {
-        return items[i];
+        return items[(nextFirst + i) % items.length];
     }
 
     /** Returns the number of items in the list. */
@@ -68,11 +78,12 @@ public class ArrayDeque<Item> {
      * returns deleted item. */
     public Item removeFirst() {
         Item x = getFirst();
-        items[(nextFirst + 1)%capacity] = null;
+        if(x == null)   return x;
+        items[(nextFirst + 1)%items.length] = null;
         size = size - 1;
-        nextFirst = (nextFirst + 1) % capacity;
-        if(size <=  capacity / 4){
-            resize(capacity / 2);
+        nextFirst = (nextFirst + 1) % items.length;
+        if(size <=  items.length / 4 && items.length > 16){
+            resize(items.length / 2);
         }
         return x;
     }
@@ -81,12 +92,22 @@ public class ArrayDeque<Item> {
      * returns deleted item. */
     public Item removeLast() {
         Item x = getLast();
-        items[(nextLast - 1)%capacity] = null;
+        if(x == null)   return x;
+        items[(nextLast - 1 < 0? nextLast - 1 + items.length : nextLast - 1)%items.length] = null;
         size = size - 1;
-        nextLast = (nextLast - 1) % capacity;
-        if(size <=  capacity / 4){
-            resize(capacity / 2);
+        nextLast = (nextLast - 1 < 0? nextLast - 1 + items.length : nextLast - 1) % items.length;
+        if(size <=  items.length / 4 && items.length > 16){
+            resize(items.length / 2);
         }
         return x;
+    }
+
+    public void printDeque() {
+        int i = 0;
+        while(i != size){
+            System.out.print(items[(nextFirst + 1 + i) % items.length] + " ");
+            i += 1;
+        }
+        System.out.println();
     }
 }
