@@ -35,8 +35,13 @@ public class LinkedListDeque<T> implements Deque<T> {
         size++;
     }
     public void addLast(T item) {
-        sentinel.previous.next = new Node(item, sentinel, sentinel.previous);
-        sentinel.previous = sentinel.previous.next;
+        Node oldLast = sentinel.previous;
+        sentinel.previous = new Node(item, sentinel, oldLast);
+        if (sentinel.next == sentinel) {
+            sentinel.next = sentinel.previous;
+        } else {
+            oldLast.next = sentinel.previous;
+        }
         size++;
     }
 
