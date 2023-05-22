@@ -62,9 +62,7 @@ public class LinkedListDeque<T> implements Deque<T> {
         }
         T item = sentinel.next.item;
         sentinel.next = sentinel.next.next;
-        if (sentinel.next == sentinel) {
-            sentinel.previous = sentinel;
-        }
+        sentinel.next.previous = sentinel;
         size--;
         return item;
     }
@@ -75,9 +73,7 @@ public class LinkedListDeque<T> implements Deque<T> {
         }
         T item = sentinel.previous.item;
         sentinel.previous = sentinel.previous.previous;
-        if (sentinel.previous == sentinel) {
-            sentinel.next = sentinel;
-        }
+        sentinel.previous.next = sentinel;
         size--;
         return item;
     }
@@ -139,7 +135,7 @@ public class LinkedListDeque<T> implements Deque<T> {
         }
         @Override
         public boolean hasNext() {
-            return wizPos < size;
+            return wizPos <= size;
         }
 
         @Override

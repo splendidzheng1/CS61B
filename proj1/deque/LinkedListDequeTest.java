@@ -142,5 +142,14 @@ public class LinkedListDequeTest {
         assertEquals(1, (int)lld1.removeLast());
         assertEquals(2, (int)lld1.removeLast());
 
+        LinkedListDeque<Integer> lld2 = new LinkedListDeque<Integer>();
+        lld2.addLast(0);
+        assertEquals(0, (int)lld2.removeFirst());
+        lld2.addFirst(2);
+        lld2.addLast(3);
+        assertEquals(2, (int)lld2.removeFirst());
+        assertEquals(3, (int)lld2.removeLast());
+        lld2.addLast(6);
+        assertEquals(6, (int)lld2.removeFirst());
     }
 }
