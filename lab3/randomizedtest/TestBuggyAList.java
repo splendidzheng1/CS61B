@@ -30,7 +30,7 @@ public class TestBuggyAList {
     }
 
     @Test
-    public void randomizedTest(){
+    public void randomizedTest() {
       AListNoResizing<Integer> correct = new AListNoResizing<>();
       BuggyAList<Integer> broken = new BuggyAList<>();
 

@@ -5,11 +5,11 @@ import edu.princeton.cs.algs4.StdDraw;
 
 public class GuitarHero {
     public static final double CONCERT_A = 440.0;
-    public static final String keyboard = "q2we4r5ty7u8i9op-[=zxdcfvgbnjmk,.;/' ";
+    public static final String KEYBORAD = "q2we4r5ty7u8i9op-[=zxdcfvgbnjmk,.;/' ";
     public static void main(String[] args) {
         /* create all guitar strings */
-        GuitarString[] string = new GuitarString[keyboard.length()];
-        for (int i = 0; i < keyboard.length(); i++) {
+        GuitarString[] string = new GuitarString[KEYBORAD.length()];
+        for (int i = 0; i < KEYBORAD.length(); i++) {
             string[i] = new GuitarString(CONCERT_A * Math.pow(2, (i - 24) / 12));
         }
 
@@ -17,15 +17,15 @@ public class GuitarHero {
             /* check if the user has typed a key; if so, process it */
             if (StdDraw.hasNextKeyTyped()) {
                 char key = StdDraw.nextKeyTyped();
-                if(keyboard.indexOf(key) != -1){
-                    string[keyboard.indexOf(key)].pluck();
+                if (KEYBORAD.indexOf(key) != -1) {
+                    string[KEYBORAD.indexOf(key)].pluck();
                 }
             }
 
             /* compute the superposition of samples */
             double sample = 0.;
             for (GuitarString gS : string) {
-                 sample += gS.sample();
+                sample += gS.sample();
             }
 
             /* play the sample on standard audio */

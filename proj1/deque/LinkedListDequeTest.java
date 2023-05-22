@@ -146,5 +146,6 @@ public class LinkedListDequeTest {
         lld1.addFirst(6);
         assertEquals(1, (int)lld1.removeLast());
         assertEquals(2, (int)lld1.removeLast());
+
     }
 }

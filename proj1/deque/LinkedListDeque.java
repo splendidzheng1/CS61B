@@ -10,8 +10,8 @@ public class LinkedListDeque<T> implements Deque<T> {
         Node next;
         Node previous;
 
-        public Node() { }
-        public Node(T item, Node next, Node previous) {
+        Node() { }
+        Node(T item, Node next, Node previous) {
             this.item = item;
             this.next = next;
             this.previous = previous;
@@ -131,7 +131,7 @@ public class LinkedListDeque<T> implements Deque<T> {
 
     private class DequeIterator implements Iterator<T> {
         private int wizPos;
-        public DequeIterator() {
+        DequeIterator() {
             wizPos = 0;
         }
         @Override
