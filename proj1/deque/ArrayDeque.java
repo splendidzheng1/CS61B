@@ -4,24 +4,24 @@ package deque;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class ArrayDeque<Item> implements Deque<Item> {
-    private Item[] items;
+public class ArrayDeque<T> implements Deque<T> {
+    private T[] items;
     private int size;
     private int nextFirst;
     private int nextLast;
-    private final int INIItemIALSIZE = 8;
+    private final int INITIALSIZE = 8;
 
     /** Creates an empty list. */
     public ArrayDeque() {
-        items = (Item[]) new Object[INIItemIALSIZE];
+        items = (T[]) new Object[INITIALSIZE];
         size = 0;
-        nextFirst = INIItemIALSIZE - 1;
+        nextFirst = INITIALSIZE - 1;
         nextLast = 0;
     }
 
     /** Resizes the underlying array to the target items.length. */
     private void resize(int capacity) {
-        Item[] a = (Item[]) new Object[capacity];
+        T[] a = (T[]) new Object[capacity];
         // If nextFirst >= nextLast, divide into two part begin with nextFirst
         // else only copy start with nextFirst and end with nextLast
         if (nextFirst >= nextLast - 1) {
@@ -36,7 +36,7 @@ public class ArrayDeque<Item> implements Deque<Item> {
     }
 
     /** Inserts X into the front of the list. */
-    public void addFirst(Item x) {
+    public void addFirst(T x) {
         if (size == items.length) {
             resize(size * 2);
         }
@@ -47,7 +47,7 @@ public class ArrayDeque<Item> implements Deque<Item> {
     }
 
     /** Inserts X into the back of the list. */
-    public void addLast(Item x) {
+    public void addLast(T x) {
         if (size == items.length) {
             resize(size * 2);
         }
@@ -57,16 +57,16 @@ public class ArrayDeque<Item> implements Deque<Item> {
         nextLast = (nextLast + 1) % items.length;
     }
     /** Returns the item from the front of the list. */
-    public Item getFirst() {
+    public T getFirst() {
         return items[(nextFirst + 1) % items.length];
     }
 
     /** Returns the item from the back of the list. */
-    public Item getLast() {
+    public T getLast() {
         return items[(nextLast - 1 < 0 ? nextLast - 1 + items.length : nextLast - 1) % items.length];
     }
     /** Gets the ith item in the list (0 is the front). */
-    public Item get(int i) {
+    public T get(int i) {
         return items[(nextFirst + i + 1) % items.length];
     }
 
@@ -76,8 +76,8 @@ public class ArrayDeque<Item> implements Deque<Item> {
     }
     /** Deletes item from front of the list and
      * returns deleted item. */
-    public Item removeFirst() {
-        Item x = getFirst();
+    public T removeFirst() {
+        T x = getFirst();
         if (x == null) {
             return x;
         }
@@ -92,8 +92,8 @@ public class ArrayDeque<Item> implements Deque<Item> {
 
     /** Deletes item from back of the list and
      * returns deleted item. */
-    public Item removeLast() {
-        Item x = getLast();
+    public T removeLast() {
+        T x = getLast();
         if (x == null) {
             return x;
         }
@@ -125,7 +125,7 @@ public class ArrayDeque<Item> implements Deque<Item> {
         if (!(o instanceof ArrayDeque)) {
             return false;
         }
-        ArrayDeque<Item> other = (ArrayDeque<Item>) o;
+        ArrayDeque<T> other = (ArrayDeque<T>) o;
         if (other.size() != this.size()) {
             return false;
         }
@@ -136,11 +136,11 @@ public class ArrayDeque<Item> implements Deque<Item> {
         }
         return true;
     }
-    public Iterator<Item> iterator() {
+    public Iterator<T> iterator() {
         return new DequeIterator();
     }
 
-    private class DequeIterator implements Iterator<Item> {
+    private class DequeIterator implements Iterator<T> {
         private int wizPos;
         public DequeIterator() {
             wizPos = 0;
@@ -151,18 +151,16 @@ public class ArrayDeque<Item> implements Deque<Item> {
         }
 
         @Override
-        public Item next() {
-            Item returnItem = get(wizPos);
+        public T next() {
+            T returnT = get(wizPos);
             wizPos += 1;
-            return returnItem;
+            return returnT;
         }
     }
 
     @Override
     public String toString() {
-        return "ArrayDeque{" +
-                "items=" + Arrays.toString(items) +
-                ", size=" + size +
-                '}';
+        return "ArrayDeque{" + "items=" + Arrays.toString(items)
+                + ", size=" + size + '}';
     }
 }

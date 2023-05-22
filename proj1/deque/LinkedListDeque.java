@@ -25,9 +25,12 @@ public class LinkedListDeque<T> implements Deque<T> {
     }
 
     public void addFirst(T item) {
-        sentinel.next = new Node(item, sentinel.next, sentinel);
+        Node oldFirst = sentinel.next;
+        sentinel.next = new Node(item, oldFirst, sentinel);
         if (sentinel.previous == sentinel) {
             sentinel.previous = sentinel.next;
+        } else {
+            oldFirst.previous = sentinel.next;
         }
         size++;
     }
@@ -87,11 +90,11 @@ public class LinkedListDeque<T> implements Deque<T> {
         return s == null ? null : s.item;
     }
 
-    public T getRecursive(int index){
+    public T getRecursive(int index) {
         return getRecursive(index, sentinel.next);
     }
 
-    public T getRecursive(int index, Node n){
+    public T getRecursive(int index, Node n) {
         if (n == null) {
             return null;
         }

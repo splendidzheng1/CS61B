@@ -125,5 +125,26 @@ public class LinkedListDequeTest {
 
     }
 
-
+    @Test
+    /* LLD-basic: Random addFirst/removeLast/isEmpty tests. */
+    public void randomAddFirstAndRemoveLastTest() {
+        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+        lld1.addFirst(0);
+        lld1.addFirst(1);
+        lld1.isEmpty();
+        lld1.isEmpty();
+        assertEquals(0, (int)lld1.removeLast());
+        lld1.isEmpty();
+        lld1.isEmpty();
+        assertEquals(1, (int)lld1.removeLast());
+        lld1.isEmpty();
+        lld1.addLast(1);
+        lld1.addFirst(2);
+        lld1.isEmpty();
+        lld1.addFirst(4);
+        lld1.size();
+        lld1.addFirst(6);
+        assertEquals(1, (int)lld1.removeLast());
+        assertEquals(2, (int)lld1.removeLast());
+    }
 }
