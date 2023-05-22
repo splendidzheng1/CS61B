@@ -27,20 +27,18 @@ public class LinkedListDeque<T> implements Deque<T> {
     public void addFirst(T item) {
         Node oldFirst = sentinel.next;
         sentinel.next = new Node(item, oldFirst, sentinel);
+        oldFirst.previous = sentinel.next;
         if (sentinel.previous == sentinel) {
             sentinel.previous = sentinel.next;
-        } else {
-            oldFirst.previous = sentinel.next;
         }
         size++;
     }
     public void addLast(T item) {
         Node oldLast = sentinel.previous;
         sentinel.previous = new Node(item, sentinel, oldLast);
+        oldLast.next = sentinel.previous;
         if (sentinel.next == sentinel) {
             sentinel.next = sentinel.previous;
-        } else {
-            oldLast.next = sentinel.previous;
         }
         size++;
     }
