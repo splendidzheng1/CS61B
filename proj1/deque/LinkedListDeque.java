@@ -83,7 +83,7 @@ public class LinkedListDeque<T> implements Deque<T> {
     public T get(int index) {
         Node s = sentinel.next;
         int i = 0;
-        while (s != null || i != index) {
+        while (s != null && i != index) {
             s = s.next;
             i += 1;
         }
