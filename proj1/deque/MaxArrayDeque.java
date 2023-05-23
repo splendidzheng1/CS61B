@@ -8,16 +8,6 @@ public class MaxArrayDeque<T> extends ArrayDeque<T> {
         cP = c;
     }
 
-    public MaxArrayDeque() {
-        super();
-    }
-
-    public static class MaxComparator implements Comparator<Integer> {
-        @Override
-        public int compare(Integer o1, Integer o2) {
-            return o1.compareTo(o2);
-        }
-    }
     public T max() {
         return max(null);
     }
