@@ -4,7 +4,7 @@ package deque;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class ArrayDeque<T> implements Deque<T> {
+public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     private T[] items;
     private int size;
     private int nextFirst;
@@ -84,7 +84,7 @@ public class ArrayDeque<T> implements Deque<T> {
         items[(nextFirst + 1) % items.length] = null;
         size = size - 1;
         nextFirst = (nextFirst + 1) % items.length;
-        if (size <=  items.length / 4 && items.length > 16) {
+        if (size <=  items.length / 4 && items.length > 2 * INITIALSIZE) {
             resize(items.length / 2);
         }
         return x;
@@ -100,7 +100,7 @@ public class ArrayDeque<T> implements Deque<T> {
         items[(nextLast - 1 < 0 ? nextLast - 1 + items.length : nextLast - 1) % items.length] = null;
         size = size - 1;
         nextLast = (nextLast - 1 < 0 ? nextLast - 1 + items.length : nextLast - 1) % items.length;
-        if (size <=  items.length / 4 && items.length > 16) {
+        if (size <=  items.length / 4 && items.length > 2 * INITIALSIZE) {
             resize(items.length / 2);
         }
         return x;
@@ -122,7 +122,7 @@ public class ArrayDeque<T> implements Deque<T> {
         if (o == null) {
             return false;
         }
-        if (!(o instanceof ArrayDeque)) {
+        if (!(o instanceof Deque)) {
             return false;
         }
         ArrayDeque<T> other = (ArrayDeque<T>) o;
