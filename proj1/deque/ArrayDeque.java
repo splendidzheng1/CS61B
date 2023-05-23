@@ -21,16 +21,19 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
 
     /** Resizes the underlying array to the target items.length. */
     private void resize(int capacity) {
-        T[] a = (T[]) new Object[capacity];
-        // If nextFirst >= nextLast, divide into two part begin with nextFirst
+        T[] newItems = (T[]) new Object[capacity];
+        int getFirst = (nextFirst + 1) % items.length;
+        int getLast = (nextLast + items.length - 1) % items.length;
+        // If getFirst > getLast, divide into front and back part
         // else only copy start with nextFirst and end with nextLast
-        if (nextFirst >= nextLast - 1) {
-            System.arraycopy(items, (nextFirst + 1) % items.length, a, 0, items.length - nextFirst - 1);
-            System.arraycopy(items, 0, a, items.length - nextFirst - 1, size - (items.length - nextFirst - 1));
+        if (getFirst > getLast) {
+            int frontLength = items.length - getFirst;
+            System.arraycopy(items, getFirst, newItems, 0, frontLength);
+            System.arraycopy(items, 0, newItems, frontLength, size - frontLength);
         } else {
-            System.arraycopy(items, (nextFirst + 1) % items.length, a, 0, size);
+            System.arraycopy(items, getFirst, newItems, 0, size);
         }
-        items = a;
+        items = newItems;
         nextFirst = capacity - 1;
         nextLast = size;
     }
@@ -42,8 +45,8 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         }
 
         items[nextFirst] = x;
-        size = size + 1;
-        nextFirst = (nextFirst - 1) % items.length;
+        size += 1;
+        nextFirst = (nextFirst + items.length - 1) % items.length;
     }
 
     /** Inserts X into the back of the list. */
@@ -53,18 +56,10 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         }
 
         items[nextLast] = x;
-        size = size + 1;
+        size += 1;
         nextLast = (nextLast + 1) % items.length;
     }
-    /** Returns the item from the front of the list. */
-    public T getFirst() {
-        return items[(nextFirst + 1) % items.length];
-    }
 
-    /** Returns the item from the back of the list. */
-    public T getLast() {
-        return items[(nextLast - 1 < 0 ? nextLast - 1 + items.length : nextLast - 1) % items.length];
-    }
     /** Gets the ith item in the list (0 is the front). */
     public T get(int i) {
         return items[(nextFirst + i + 1) % items.length];
@@ -74,16 +69,18 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     public int size() {
         return size;
     }
+
     /** Deletes item from front of the list and
      * returns deleted item. */
     public T removeFirst() {
-        T x = getFirst();
+        T x = get(0);
         if (x == null) {
-            return x;
+            return null;
         }
-        items[(nextFirst + 1) % items.length] = null;
+        int getFirst = (nextFirst + 1) % items.length;
+        items[getFirst] = null;
         size = size - 1;
-        nextFirst = (nextFirst + 1) % items.length;
+        nextFirst = getFirst;
         if (size <=  items.length / 4 && items.length > 2 * INITIALSIZE) {
             resize(items.length / 2);
         }
@@ -93,13 +90,14 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     /** Deletes item from back of the list and
      * returns deleted item. */
     public T removeLast() {
-        T x = getLast();
+        int getLast = (nextLast + items.length - 1) % items.length;
+        T x = get(size - 1);
         if (x == null) {
             return x;
         }
-        items[(nextLast - 1 < 0 ? nextLast - 1 + items.length : nextLast - 1) % items.length] = null;
+        items[getLast] = null;
         size = size - 1;
-        nextLast = (nextLast - 1 < 0 ? nextLast - 1 + items.length : nextLast - 1) % items.length;
+        nextLast = getLast;
         if (size <=  items.length / 4 && items.length > 2 * INITIALSIZE) {
             resize(items.length / 2);
         }
