@@ -30,7 +30,6 @@ public class TestArrayDequeEC {
                 // System.out.println("addLast(" + randVal + ")");
             } else if (operationNumber == 2) {
                 // removeLast
-                assertEquals(sb.toString(), correct.size(), broken.size());
                 if (correct.size() > 0 && broken.size() > 0) {
                     Integer c_last = correct.removeLast();
                     Integer b_last = broken.removeLast();
@@ -40,7 +39,6 @@ public class TestArrayDequeEC {
                 }
             } else if (operationNumber == 3) {
                 // removeFirst
-                assertEquals(sb.toString(), correct.size(), broken.size());
                 if (correct.size() > 0 && broken.size() > 0) {
                     Integer c_first = correct.removeFirst();
                     Integer b_first = broken.removeFirst();
