@@ -5,7 +5,7 @@ import java.io.File;
 import static capers.Utils.*;
 
 /** Canine Capers: A Gitlet Prelude.
- * @author TODO
+ * @author Charles
 */
 public class Main {
     /**
@@ -49,14 +49,16 @@ public class Main {
             validateNumArgs("story", args, 2);
             text = args[1];
             CapersRepository.writeStory(text);
+            System.out.println(CapersRepository.readStory());
             break;
         case "dog":
             validateNumArgs("dog", args, 4);
-            // TODO: make a dog
+            CapersRepository.makeDog(args[1], args[2], Integer.parseInt(args[3]));
             break;
         case "birthday":
             validateNumArgs("birthday", args, 2);
             // TODO: celebrate this dog's birthday
+            CapersRepository.celebrateBirthday(args[1]);
             break;
         default:
             exitWithError(String.format("Unknown command: %s", args[0]));
