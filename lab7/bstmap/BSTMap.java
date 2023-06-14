@@ -129,11 +129,11 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     }
 
     @Override
-    public Set keySet() {
+    public Set<K> keySet() {
         return keySet(root);
     }
 
-    private Set keySet(Node node) {
+    private Set<K> keySet(Node node) {
         Set<K> res = new TreeSet<>();
         keySet(res, node);
         return res;
@@ -216,7 +216,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     }
 
     @Override
-    public Iterator iterator() {
+    public Iterator<K> iterator() {
         throw new UnsupportedOperationException("Not support iterator yet");
     }
 }

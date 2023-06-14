@@ -1,6 +1,6 @@
 package hashmap;
 
-import java.util.Collection;
+import java.util.*;
 
 /**
  *  A hash table-backed Map implementation. Provides amortized constant time
@@ -11,10 +11,6 @@ import java.util.Collection;
  */
 public class MyHashMap<K, V> implements Map61B<K, V> {
 
-    /**
-     * Protected helper class to store key/value pairs
-     * The protected qualifier allows subclass access
-     */
     protected class Node {
         K key;
         V value;
@@ -28,11 +24,29 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     /* Instance Variables */
     private Collection<Node>[] buckets;
     // You should probably define some more!
+    private final int DEFAULTSIZE = 16;
+    private int initialSize = DEFAULTSIZE;
+    private double loadFactor = 0.75;
+    private int size;
+    private HashSet<K> keySet;
+    /**
+     * Protected helper class to store key/value pairs
+     * The protected qualifier allows subclass access
+     */
 
     /** Constructors */
-    public MyHashMap() { }
+    public MyHashMap() {
+        size = 0;
+        buckets = createTable(initialSize);
+        keySet = new HashSet<>();
+    }
 
-    public MyHashMap(int initialSize) { }
+    public MyHashMap(int initialSize) {
+        this.initialSize = initialSize;
+        size = 0;
+        buckets = createTable(initialSize);
+        keySet = new HashSet<>();
+    }
 
     /**
      * MyHashMap constructor that creates a backing array of initialSize.
@@ -41,13 +55,19 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * @param initialSize initial size of backing array
      * @param maxLoad maximum load factor
      */
-    public MyHashMap(int initialSize, double maxLoad) { }
+    public MyHashMap(int initialSize, double maxLoad) {
+        this.initialSize = initialSize;
+        this.loadFactor = maxLoad;
+        size = 0;
+        buckets = createTable(initialSize);
+        keySet = new HashSet<>();
+    }
 
     /**
      * Returns a new node to be placed in a hash table bucket
      */
     private Node createNode(K key, V value) {
-        return null;
+        return new Node(key, value);
     }
 
     /**
@@ -69,7 +89,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * OWN BUCKET DATA STRUCTURES WITH THE NEW OPERATOR!
      */
     protected Collection<Node> createBucket() {
-        return null;
+        return new LinkedList<>();
     }
 
     /**
@@ -82,10 +102,140 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * @param tableSize the size of the table to create
      */
     private Collection<Node>[] createTable(int tableSize) {
+        Collection<Node>[] res = new Collection[tableSize];
+        for (int i = 0; i < tableSize; i++) {
+            res[i] = createBucket();
+        }
+        return res;
+    }
+
+    // Your code won't compile until you do so!
+    @Override
+    public void clear() {
+        initialSize = DEFAULTSIZE;
+        buckets = createTable(initialSize);
+        keySet = new HashSet<>();
+        size = 0;
+    }
+
+    @Override
+    public boolean containsKey(K key) {
+        return keySet.contains(key);
+    }
+
+    @Override
+    public V get(K key) {
+        int pos = Math.floorMod(key.hashCode(), initialSize);
+        for (Node item : buckets[pos]) {
+            if (item.key.equals(key)) {
+                return item.value;
+            }
+        }
         return null;
     }
 
-    // TODO: Implement the methods of the Map61B Interface below
-    // Your code won't compile until you do so!
+    @Override
+    public int size() {
+        return size;
+    }
 
+    @Override
+    public void put(K key, V value) {
+        if ((double) size / initialSize >= loadFactor) {
+            Collection<Node>[] newTable = createTable(initialSize * 2);
+            initialSize *= 2;
+            for (Collection<Node> collection : buckets) {
+                for (Node item : collection) {
+                    if (item.key == null) {
+                        continue;
+                    }
+                    int pos = Math.floorMod(item.key.hashCode(), initialSize);
+                    newTable[pos].add(item);
+                }
+            }
+            buckets = newTable;
+        }
+        int pos = Math.floorMod(key.hashCode(), initialSize);
+        if (!containsKey(key)) {
+            buckets[pos].add(createNode(key, value));
+            keySet.add(key);
+            size += 1;
+        } else {
+            for (Node item : buckets[pos]) {
+                if (item.key.equals(key)) {
+                    item.value = value;
+                }
+            }
+        }
+    }
+
+    @Override
+    public Set<K> keySet() {
+        return keySet;
+    }
+
+    @Override
+    public V remove(K key) {
+        if (!containsKey(key)) {
+            return null;
+        }
+        V value = null;
+        int pos = Math.floorMod(key.hashCode(), initialSize);
+        for (Node item : buckets[pos]) {
+            if (item.key.equals(key)) {
+                item.key = null;
+                value = item.value;
+            }
+        }
+        keySet.remove(key);
+        return value;
+    }
+
+    @Override
+    public V remove(K key, V value) {
+        if (!containsKey(key)) {
+            return null;
+        }
+        int pos = Math.floorMod(key.hashCode(), initialSize);
+        for (Node item : buckets[pos]) {
+            if (item.key.equals(key) && item.value.equals(value)) {
+                item.key = null;
+                keySet.remove(key);
+                return value;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Iterator<K> iterator() {
+        return new HSMapIter();
+    }
+
+    /** An iterator that iterates over the keys of the dictionary. */
+    private class HSMapIter implements Iterator<K> {
+
+        /**
+         * Create a new HSMapIter by setting cur to the first node in the
+         * linked list that stores the key-value pairs.
+         */
+        HSMapIter() {
+            cur = keySet.iterator();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return cur.hasNext();
+        }
+
+        @Override
+        public K next() {
+            return cur.next();
+        }
+
+
+        /** Stores the current key-value pair. */
+        private Iterator<K> cur;
+
+    }
 }

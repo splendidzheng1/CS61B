@@ -2,13 +2,13 @@ package gitlet;
 
 // TODO: any imports you need here
 
-import java.util.Date; // TODO: You'll likely use this in this class
+import java.util.Date;
 
 /** Represents a gitlet commit object.
  *  TODO: It's a good idea to give a description here of what else this Class
  *  does at a high level.
  *
- *  @author TODO
+ *  @author Charles
  */
 public class Commit {
     /**
@@ -23,4 +23,6 @@ public class Commit {
     private String message;
 
     /* TODO: fill in the rest of this class. */
+    /** The date of this Commit. */
+    private Date date;
 }
