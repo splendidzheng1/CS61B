@@ -2,6 +2,7 @@ package gitlet;
 
 // TODO: any imports you need here
 
+import java.io.Serializable;
 import java.util.Date;
 
 /** Represents a gitlet commit object.
@@ -10,7 +11,7 @@ import java.util.Date;
  *
  *  @author Charles
  */
-public class Commit {
+public class Commit implements Serializable, Dumpable {
     /**
      * TODO: add instance variables here.
      *
@@ -22,7 +23,55 @@ public class Commit {
     /** The message of this Commit. */
     private String message;
 
-    /* TODO: fill in the rest of this class. */
     /** The date of this Commit. */
     private Date date;
+
+    /** The author of this Commit. */
+    private String author;
+
+    /** The parent of this Commit. */
+    private String parentID;
+
+    @Override
+    public String toString() {
+        return "Commit{" +
+                "message='" + message + '\'' +
+                ", date=" + date +
+                ", author='" + author + '\'' +
+                ", parentID='" + parentID + '\'' +
+                '}';
+    }
+
+    public Commit(String message, Date date, String author, String parentID) {
+        this.message = message;
+        this.date = date;
+        this.author = author;
+        this.parentID = parentID;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getParentID() {
+        return parentID;
+    }
+
+    @Override
+    public void dump() {
+        System.out.println("Commit{" +
+                "message='" + message + '\'' +
+                ", date=" + date +
+                ", author='" + author + '\'' +
+                ", parentID='" + parentID + '\'' +
+                '}');
+    }
 }

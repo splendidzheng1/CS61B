@@ -2,6 +2,9 @@ package gitlet;
 
 import java.io.File;
 
+import static gitlet.Repository.CWD;
+import static gitlet.Utils.join;
+
 /** A debugging class whose main program may be invoked as follows:
  *      java gitlet.DumpObj FILE...
  *  where each FILE is a file produced by Utils.writeObject (or any file
@@ -33,8 +36,8 @@ public class DumpObj {
      *  in FILES. */
     public static void main(String... files) {
         for (String fileName : files) {
-            Dumpable obj = Utils.readObject(new File(fileName),
-                                            Dumpable.class);
+            Dumpable obj = Utils.readObject(join(CWD, fileName),
+                                                Dumpable.class);
             obj.dump();
             System.out.println("---");
         }

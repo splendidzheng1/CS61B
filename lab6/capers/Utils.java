@@ -119,7 +119,7 @@ class Utils {
     /** Returns a byte array containing the serialized contents of OBJ. */
     static byte[] serialize(Serializable obj) {
         try {
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            ByteArrayOutputStream stream = new c();
             ObjectOutputStream objectStream = new ObjectOutputStream(stream);
             objectStream.writeObject(obj);
             objectStream.close();
