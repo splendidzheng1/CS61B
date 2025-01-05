@@ -20,10 +20,10 @@ PACKAGE = gitlet
 # has a different name for this program (such as just "python"), run
 # the Makefile with
 #	make PYTHON=python check
-PYTHON = python
+PYTHON = python3
 
 # Flags to pass to tester.py.
-TESTER_FLAGS =
+TESTER_FLAGS = --show=1
 
 RMAKE = "$(MAKE)"
 
@@ -38,7 +38,7 @@ check: default
 
 # 'make clean' will clean up stuff you can reconstruct.
 clean:
-	$(RM) *~
+	$(RM) -r *~ .gitlet
 	$(RMAKE) -C $(PACKAGE) clean
 	$(RMAKE) -C testing clean
 

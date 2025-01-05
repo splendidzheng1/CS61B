@@ -1,24 +1,14 @@
 # Gitlet Design Document
-
-**Name**:
+**Name**: Charles
 
 ## Classes and Data Structures
-
 ### Commit
-
 #### Fields
-
 1. "private String message" The message of this Commit.
-2. Field 2
+2. "private Date date" The date of this Commit.
 
-
-### Class 2
-
+### Repositoru
 #### Fields
-
-1. Field 1
-2. Field 2
-
 
 ## Algorithms
 

@@ -2,8 +2,16 @@ package gitlet;
 
 // TODO: any imports you need here
 
+import javax.swing.*;
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.TreeMap;
+
+import static gitlet.Utils.sha1;
 
 /** Represents a gitlet commit object.
  *  TODO: It's a good idea to give a description here of what else this Class
@@ -12,14 +20,6 @@ import java.util.Date;
  *  @author Charles
  */
 public class Commit implements Serializable, Dumpable {
-    /**
-     * TODO: add instance variables here.
-     *
-     * List all instance variables of the Commit class here with a useful
-     * comment above them describing what that variable represents and how that
-     * variable is used. We've provided one example for `message`.
-     */
-
     /** The message of this Commit. */
     private String message;
 
@@ -30,23 +30,29 @@ public class Commit implements Serializable, Dumpable {
     private String author;
 
     /** The parent of this Commit. */
-    private String parentID;
+    private String parentID1;
 
-    @Override
-    public String toString() {
-        return "Commit{" +
-                "message='" + message + '\'' +
-                ", date=" + date +
-                ", author='" + author + '\'' +
-                ", parentID='" + parentID + '\'' +
-                '}';
-    }
+    /** The parent of this Commit. */
+    private String parentID2;
 
-    public Commit(String message, Date date, String author, String parentID) {
+    /** The sha1 of this Commit. */
+    private String sha1;
+
+    /** The files of this Commit. */
+    private TreeMap<String, String> blobs;
+
+    public Commit(String message, Date date, String parentID1, String parentID2, TreeMap<String, String> blobs) {
         this.message = message;
         this.date = date;
-        this.author = author;
-        this.parentID = parentID;
+        this.parentID1 = parentID1 == null ? "" : parentID1;
+        this.parentID2 = parentID2 == null ? "" : parentID2;
+        if (parentID1 != null) {
+            this.blobs = blobs;
+        }
+        if (this.blobs == null) {
+            this.blobs = new TreeMap<>();
+        }
+        this.sha1 = "";
     }
 
     public String getMessage() {
@@ -61,8 +67,43 @@ public class Commit implements Serializable, Dumpable {
         return author;
     }
 
-    public String getParentID() {
-        return parentID;
+    public String getParentID1() {
+        return parentID1;
+    }
+
+    public void setParentID1(String parentID1) {
+        this.parentID1 = parentID1;
+    }
+
+    public String getParentID2() {
+        return parentID2;
+    }
+
+    public void setParentID2(String parentID2) {
+        this.parentID2 = parentID2;
+    }
+
+    public String getSha1() {
+        if (sha1.isEmpty()) {
+            List<Object> obj = new ArrayList<>();
+            obj.add(date.toString());
+            obj.add(parentID1);
+            obj.add(parentID2);
+            obj.add(message);
+            for (Object value : blobs.values()) {
+                try {
+                    obj.add(Files.readAllBytes(Utils.join(Repository.OBJ_DIR, value.toString()).toPath()));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            sha1 = sha1(obj);
+        }
+        return sha1;
+    }
+
+    public TreeMap<String, String> getBlobs() {
+        return blobs;
     }
 
     @Override
@@ -71,7 +112,8 @@ public class Commit implements Serializable, Dumpable {
                 "message='" + message + '\'' +
                 ", date=" + date +
                 ", author='" + author + '\'' +
-                ", parentID='" + parentID + '\'' +
+                ", parentID1='" + parentID1 + '\'' +
+                ", parentID2='" + parentID2 + '\'' +
                 '}');
     }
 }

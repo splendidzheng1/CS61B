@@ -12,8 +12,10 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Formatter;
 import java.util.List;
@@ -63,6 +65,17 @@ class Utils {
         return sha1(vals.toArray(new Object[vals.size()]));
     }
 
+    static String blobSha1(File blob) {
+        if (blob.isFile() && blob.exists()) {
+            List<Object> lObject = new ArrayList<>();
+            lObject.add(blob.getName());
+            lObject.add(readContents(blob));
+            return sha1(lObject);
+        } else {
+            throw new IllegalArgumentException("improper type to blobSha1");
+        }
+    }
+
     /* FILE DELETION */
 
     /** Deletes FILE if it exists and is not a directory.  Returns true
@@ -70,10 +83,10 @@ class Utils {
      *  and throws IllegalArgumentException unless the directory designated by
      *  FILE also contains a directory named .gitlet. */
     static boolean restrictedDelete(File file) {
-        if (!(new File(file.getParentFile(), ".gitlet")).isDirectory()) {
-            throw new IllegalArgumentException("not .gitlet working directory");
-        }
-        if (!file.isDirectory()) {
+//        if (!(new File(file.getParentFile(), ".gitlet")).isDirectory()) {
+//            throw new IllegalArgumentException("not .gitlet working directory");
+//        }
+        if (!file.isDirectory() && file.exists()) {
             return file.delete();
         } else {
             return false;
@@ -122,7 +135,9 @@ class Utils {
                     new IllegalArgumentException("cannot overwrite directory");
             }
             BufferedOutputStream str =
-                new BufferedOutputStream(Files.newOutputStream(file.toPath()));
+                new BufferedOutputStream(Files.newOutputStream(file.toPath(), StandardOpenOption.CREATE,
+                        StandardOpenOption.WRITE,
+                        StandardOpenOption.TRUNCATE_EXISTING));
             for (Object obj : contents) {
                 if (obj instanceof byte[]) {
                     str.write((byte[]) obj);
@@ -204,7 +219,6 @@ class Utils {
         return Paths.get(first.getPath(), others).toFile();
     }
 
-
     /* SERIALIZATION UTILITIES */
 
     /** Returns a byte array containing the serialized contents of OBJ. */
@@ -219,8 +233,6 @@ class Utils {
             throw error("Internal error serializing commit.");
         }
     }
-
-
 
     /* MESSAGES AND ERROR REPORTING */
 

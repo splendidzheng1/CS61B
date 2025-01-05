@@ -37,7 +37,7 @@ public class DumpObj {
     public static void main(String... files) {
         for (String fileName : files) {
             Dumpable obj = Utils.readObject(join(CWD, fileName),
-                                                Dumpable.class);
+                    Dumpable.class);
             obj.dump();
             System.out.println("---");
         }
